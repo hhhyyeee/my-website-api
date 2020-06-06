@@ -18,9 +18,8 @@ app.use(cookieParser());
 // router
 // app.use('/api/cinema', require('./api/routes/cinema').cinema);
 app.use('/api/post', require('./api/routes/base').base);
-app.use('/api/dev', require('./api/routes/dev').dev);
-app.use('/api/film', require('./api/routes/film').film);
 app.use('/api/category', require('./api/routes/category').category);
+app.use('/api/comment', require('./api/routes/comment').comment);
 
 app.listen(3030, () => {
 	console.log('Example app listening on port 3030!');

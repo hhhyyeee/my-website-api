@@ -3,7 +3,7 @@ const router = express.Router();
 const db = require('../database/config');
 
 router.get('/welcome', (req, res) => { // root page
-	res.send('Base\n');
+	res.send('Testing... Base (Post)\n');
 });
 
 router.get('/all', (req, res) => { // retrieve every rows

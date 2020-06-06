@@ -16,9 +16,8 @@ router.get('/', (req, res) => {
 
 router.get('/:category', (req, res) => {
 	console.log(req.params.category);
-    // const category = String(req.params.category);
     const category = req.params.category;
-	db.query("select id, title, author, date from Post where category = ?", category, (err, rows) => {
+	db.query('SELECT `id`, `title`, `author`, `category`, `date` FROM `Post` WHERE `category` = ?', [category], (err, rows) => {
         if (!err) {
             console.log("Posts in " + category + " Retrieved!");
             return res.json(rows);
