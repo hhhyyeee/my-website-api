@@ -14,6 +14,18 @@ router.get('/', (req, res) => {
     });
 })
 
+router.get('/all', (req, res) => {
+	db.query('SELECT `id`, `title`, `author`, `category`, `date` FROM `Post`', (err, rows) => {
+        if (!err) {
+            console.log("All Posts Retrieved!");
+            return res.json(rows);
+        } else {
+            console.log(`query error : ${err}`);
+            return res.json(err);
+        }
+    });
+})
+
 router.get('/:category', (req, res) => {
 	console.log(req.params.category);
     const category = req.params.category;

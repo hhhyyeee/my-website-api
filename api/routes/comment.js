@@ -9,7 +9,6 @@ router.get('/welcome', (req, res) => { // root page
 router.get('/', (req, res) => { // retrieve every rows
 	db.query("SELECT * FROM Comment", (err, rows) => {
 		if (!err) {
-			console.log(rows);
 			return res.json(rows);
 		} else {
 			console.log(`query error : ${err}`);
@@ -56,36 +55,35 @@ router.post('/', (req, res) => { // create one (body param: title, year, directo
 	db.query("SELECT * FROM Comment ORDER BY id DESC LIMIT 1", (err, rows) => {
 		if (!err) {
 			newid = rows[0].id + 1;
+			const nickname = req.body.nickname || '';
+			if (!nickname.length) {
+				return res.status(400).json({error: 'Empty Nickname'});
+			}
+			const content = req.body.content || '';
+			if (!content.length) {
+				return res.status(400).json({error: 'Empty Content'});
+			}
+			
+			console.log("id: " + newid + ", nickname: " + nickname + ", content: " + content);
+			let sql = "INSERT INTO Comment (id, nickname, content) VALUES ?";
+			let values = [
+				[newid, nickname, content],
+			];
+			db.query(sql, [values], (err, result) => {
+				if (err) throw err;
+				console.log("Number of records inserted: " + result.affectedRows);
+			});
+			const newComment = {
+				id: newid,
+				nickname: nickname,
+				content: content
+			};
+			return res.json(newComment);
 		} else {
 			console.log(`query error : ${err}`);
 			return res.status(400).json({error: "Retrieve Error"});
 		}
 	});
-	const nickname = req.body.nickname || '';
-	if (!nickname.length) {
-		return res.status(400).json({error: 'Empty nickname'});
-	}
-	const content = req.body.content || '';
-	if (!content.length) {
-		return res.status(400).json({error: 'Empty content'});
-	}
-	
-	console.log("id: " + newid + ", nickname: " + nickname + ", content: " + content);
-	let sql = "INSERT INTO Comment (nickname, content) VALUES ?";
-	let values = [
-		[nickname, content],
-	];
-	db.query(sql, [values], function (err, result) {
-		if (err) throw err;
-		console.log("Number of records inserted: " + result.affectedRows);
-	});
-
-	const newComment = {
-		id: newid,
-		nickname: nickname,
-		content: content
-	};
-	return res.json(newComment);
 })
 
 module.exports.comment = router;
